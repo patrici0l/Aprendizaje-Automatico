@@ -1,0 +1,7 @@
+run_id,Experimento,Familia,RMSE,MAE,R2,Tiempo_ms,Archivo_Modelo
+70f69aef611e46bfa6ef9c647e744db6,Exp5_RandomForest_Base_100,RandomForest,537.39,309.93,0.9305,83.0,Exp5_RandomForest_Base_100.pkl
+42a56666fa554cd5a7af9535107f333f,Exp6_RandomForest_Optimizado_300,RandomForest,543.08,311.12,0.929,215.4,Exp6_RandomForest_Optimizado_300.pkl
+519dd65fca4545e5b614853771fa26a8,Exp2_SVM_Kernel_Polinomico_d2,SVM,574.37,303.42,0.9206,19.9,Exp2_SVM_Kernel_Polinomico_d2.pkl
+a8e9e7cb142f473ea100b37134d2e499,Exp3_SVM_Kernel_RBF_Gaussiano,SVM,609.45,313.09,0.9106,12.7,Exp3_SVM_Kernel_RBF_Gaussiano.pkl
+c458cdc1430049a4a340ea0d6643ce49,Exp1_SVM_Kernel_Lineal,SVM,961.96,400.86,0.7771,18.1,Exp1_SVM_Kernel_Lineal.pkl
+3d4865a91fbb41098a5d0224ad11e371,Exp4_SVM_Kernel_Sigmoide,SVM,1399.89,540.34,0.5281,11.6,Exp4_SVM_Kernel_Sigmoide.pkl
