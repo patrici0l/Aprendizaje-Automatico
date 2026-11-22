@@ -8502,6 +8502,9 @@ Created version '1' of model 'Top4_SVR_rbf_C100.0'.
 
 <span class="n">mejor_global_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">segundo_mejor_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="p">[</span><span class="n">df_experimentos</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">peor_global_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s1">'peor_modelo_svm.pkl'</span><span class="p">),</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">peor_global_row</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"mejor_modelo_svm.pkl"</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">mejor_global_row</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
@@ -8512,6 +8515,7 @@ Created version '1' of model 'Top4_SVR_rbf_C100.0'.
     <span class="s2">"mejor_experimento_global"</span><span class="p">:</span> <span class="n">mejor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
     <span class="s2">"mejor_experimento_svm"</span><span class="p">:</span> <span class="n">mejor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
     <span class="s2">"segundo_mejor_svm"</span><span class="p">:</span> <span class="n">segundo_mejor_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+    <span class="s2">"peor_experimento_svm"</span><span class="p">:</span> <span class="n">peor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
     <span class="s2">"mejores_por_kernel"</span><span class="p">:</span> <span class="n">mejores_por_kernel</span>
 <span class="p">}</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"mejor_experimento_info.json"</span><span class="p">),</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -8539,6 +8543,149 @@ Rank_02_SVR_poly_C10.0   poly  10.0     599.74    308.43   0.9134   872.61  132.
 Rank_04_SVR_rbf_C100.0    rbf 100.0     616.89    319.52   0.9084   821.44   91.92
 </pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=concl_exp_24">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<hr/>
+<h3 id="Punto-8.-Conclusiones-y-Recomendaciones-Detalladas-por-Cada-Punto-+-Referencias-Bibliogr%C3%A1ficas-(Formato-APA)">Punto 8. Conclusiones y Recomendaciones Detalladas por Cada Punto + Referencias Bibliográficas (Formato APA)<a class="anchor-link" href="#Punto-8.-Conclusiones-y-Recomendaciones-Detalladas-por-Cada-Punto-+-Referencias-Bibliogr%C3%A1ficas-(Formato-APA)">¶</a></h3><h4 id="8.1-Matriz-Resumen-de-las-24-Combinaciones-Evaluadas-en-MLflow-(4-Kernels-%C3%97-6-Valores-de-$C$)">8.1 Matriz Resumen de las 24 Combinaciones Evaluadas en MLflow (4 Kernels × 6 Valores de $C$)<a class="anchor-link" href="#8.1-Matriz-Resumen-de-las-24-Combinaciones-Evaluadas-en-MLflow-(4-Kernels-%C3%97-6-Valores-de-$C$)">¶</a></h4><table>
+<thead>
+<tr>
+<th style="text-align:left">Tipo de Kernel</th>
+<th style="text-align:center">$C = 0.1$</th>
+<th style="text-align:center">$C = 0.5$</th>
+<th style="text-align:center">$C = 1.0$</th>
+<th style="text-align:center">$C = 5.0$</th>
+<th style="text-align:center">$C = 10.0$</th>
+<th style="text-align:center">$C = 100.0$</th>
+<th style="text-align:left">Mejor Modelo del Kernel ($R^2$)</th>
+<th style="text-align:left">Peor Modelo del Kernel ($R^2$)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Polinómico (<code>poly</code>, $d=2$)</strong></td>
+<td style="text-align:center">1703.52 u</td>
+<td style="text-align:center">1278.09 u</td>
+<td style="text-align:center">902.29 u</td>
+<td style="text-align:center"><strong>574.37 u</strong></td>
+<td style="text-align:center">599.74 u</td>
+<td style="text-align:center">666.84 u</td>
+<td style="text-align:left"><strong><code>Rank_01</code> ($C=5$, $R^2=0.9206$)</strong></td>
+<td style="text-align:left"><code>Rank_20</code> ($C=0.1$, $R^2=0.3011$)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>RBF Gaussiano (<code>rbf</code>)</strong></td>
+<td style="text-align:center">2020.40 u</td>
+<td style="text-align:center">1450.44 u</td>
+<td style="text-align:center">1103.75 u</td>
+<td style="text-align:center"><strong>609.45 u</strong></td>
+<td style="text-align:center">635.56 u</td>
+<td style="text-align:center">616.89 u</td>
+<td style="text-align:left"><strong><code>Rank_03</code> ($C=5$, $R^2=0.9106$)</strong></td>
+<td style="text-align:left"><code>Rank_22</code> ($C=0.1$, $R^2=0.0170$)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Lineal (<code>linear</code>)</strong></td>
+<td style="text-align:center">1023.43 u</td>
+<td style="text-align:center">992.55 u</td>
+<td style="text-align:center">961.96 u</td>
+<td style="text-align:center"><strong>953.35 u</strong></td>
+<td style="text-align:center">966.39 u</td>
+<td style="text-align:center">967.35 u</td>
+<td style="text-align:left"><strong><code>Rank_08</code> ($C=5$, $R^2=0.7811$)</strong></td>
+<td style="text-align:left"><code>Rank_13</code> ($C=0.1$, $R^2=0.7478$)</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Sigmoide (<code>sigmoid</code>)</strong></td>
+<td style="text-align:center">2151.42 u</td>
+<td style="text-align:center">2048.14 u</td>
+<td style="text-align:center">1899.86 u</td>
+<td style="text-align:center">1265.99 u</td>
+<td style="text-align:center">1076.84 u</td>
+<td style="text-align:center"><strong>1055.43 u</strong></td>
+<td style="text-align:left"><strong><code>Rank_14</code> ($C=100$, $R^2=0.7317$)</strong></td>
+<td style="text-align:left"><strong><code>Rank_24</code> ($C=0.1$, $R^2=-0.1147$)</strong></td>
+</tr>
+</tbody>
+</table>
+<hr/>
+<h4 id="8.2-Conclusiones-Detalladas-de-Cada-Punto">8.2 Conclusiones Detalladas de Cada Punto<a class="anchor-link" href="#8.2-Conclusiones-Detalladas-de-Cada-Punto">¶</a></h4><ol>
+<li><p><strong>Conclusión del Punto 1 y 2 (Limpieza de Datos, Ingeniería de Variables y Preprocesamiento):</strong></p>
+<ul>
+<li>La auditoría de calidad sobre los 600 registros (10 productos durante 60 días continuos) confirmó 0 valores nulos y 0 duplicados. La descomposición de <code>fecha_venta</code> en <code>dia_semana</code> y <code>es_fin_de_semana</code>, combinada con <code>StandardScaler</code> para las 6 variables numéricas, <code>OneHotEncoder</code> para <code>product_id</code> y <code>categoria</code>, y la transformación logarítmica del objetivo (<code>TransformedTargetRegressor</code> con $\log(1+y)$), fue indispensable para estabilizar la varianza entre productos de baja rotación (media de 31 u/día en Laptops) y alta rotación (media de 6272 u/día en Cables HDMI).</li>
+</ul>
+</li>
+<li><p><strong>Conclusión del Punto 3 de Experimentación (Fine Tuning de las 24 Combinaciones: 4 Kernels × 6 Valores de $C$):</strong></p>
+<ul>
+<li>La exploración exhaustiva de las 24 combinaciones demostró que la elección conjunta del kernel y del parámetro de regularización $C$ reduce el RMSE desde <strong>2151.42 unidades</strong> en el peor modelo (<code>Rank_24_SVR_sigmoid_C0.1</code>, $R^2 = -0.1147$) hasta <strong>574.37 unidades</strong> en el mejor modelo (<code>Rank_01_SVR_poly_C5.0</code>, $R^2 = 0.9206$), lo que equivale a una <strong>reducción del 73.3 % en el error cuadrático medio</strong>.</li>
+<li>El valor <strong>$C = 5.0$</strong> resultó ser el punto óptimo para los tres kernels válidos de Mercer (<code>poly</code>, <code>rbf</code> y <code>linear</code>): valores pequeños ($C \in \{0.1, 0.5\}$) provocan subajuste severo (el modelo ignora las diferencias entre productos), mientras que valores muy altos ($C = 100.0$ en el kernel polinómico, RMSE = 666.84 u) empiezan a sobreajustar el ruido del entrenamiento.</li>
+</ul>
+</li>
+<li><p><strong>Conclusión del Registro y Comparativa en MLflow (<code>Runs</code>, <code>Models</code> y <code>Parallel Coordinates</code>):</strong></p>
+<ul>
+<li>El registro estructurado en MLflow permitió comparar las 24 corridas bajo 6 métricas simultáneas de validación cruzada y prueba (<code>RMSE_CV</code>, <code>STD_CV</code>, <code>RMSE_Train_CV</code>, <code>RMSE_Test</code>, <code>MAE_Test</code> y <code>R2_Test</code>), aislando en la pestaña <strong><code>Models</code></strong> los 4 mejores modelos globales (<code>Rank_01_SVR_poly_C5.0</code>, <code>Rank_02_SVR_poly_C10.0</code>, <code>Rank_03_SVR_rbf_C5.0</code> y <code>Rank_04_SVR_rbf_C100.0</code>), todos con $R^2 &gt; 0.908$.</li>
+</ul>
+</li>
+<li><p><strong>Conclusión del Punto 3 y 4 de Predicción (Predicción por Producto y Fecha y Gráfica de 2 Ítems Específicos: Mejor vs. Peor Modelo):</strong></p>
+<ul>
+<li>Al evaluar los <strong>2 ítems específicos solicitados</strong> frente al Valor Real del dataset:<ul>
+<li>En el <strong>Ítem 1 (<code>product_id=4</code>, Cable HDMI 4K, fecha <code>2024-04-08</code>, Valor Real = 3000 u)</strong>: el <strong>Mejor Modelo (<code>Rank_01_SVR_poly_C5.0</code>)</strong> predijo <strong>3007.0 u</strong> (<strong>error de solo 0.23 %</strong>), mientras que el <strong>Peor Modelo (<code>Rank_24_SVR_sigmoid_C0.1</code>)</strong> predijo apenas <strong>409.8 u</strong> (<strong>error del 86.34 %</strong>).</li>
+<li>En el <strong>Ítem 2 (<code>product_id=70</code>, Monitor LG 24", fecha <code>2024-05-18</code>, Valor Real = 4037 u)</strong>: el <strong>Mejor Modelo</strong> predijo <strong>4042.8 u</strong> (<strong>error de solo 0.14 %</strong>), mientras que el <strong>Peor Modelo</strong> predijo <strong>429.0 u</strong> (<strong>error del 89.37 %</strong>).</li>
+</ul>
+</li>
+<li>Esto demuestra gráficamente que el peor modelo (<code>sigmoid</code> con $C=0.1$) entrega una predicción casi plana cercana a 350–400 unidades sin importar el producto ni la fecha, mientras que el modelo afinado (<code>poly</code> con $C=5.0$) reproduce con fidelidad los picos reales de demanda.</li>
+</ul>
+</li>
+<li><p><strong>Conclusión del Punto 5 y 6 (Auditoría por Producto, Nuevos Samples Hipotéticos y Sensibilidad al Descuento):</strong></p>
+<ul>
+<li>La función <code>predecir_nuevo_sample()</code>, evaluada en 4 productos de distintas categorías (Accesorios, Audio, Computación y Telefonía), mantiene todas sus estimaciones dentro de los rangos históricos reales de cada producto y detecta oportunamente los escenarios de quiebre de stock.</li>
+<li>En la prueba de sensibilidad sobre el producto ID 38 (<em>Parlante Bluetooth BLUE Bass</em>), aplicar un 20 % de descuento (<code>discount=0.80</code>) incrementa la demanda estimada por el Mejor Modelo en <strong>+81.3 %</strong> (<code>152.5 u</code> $
+ightarrow$ <code>276.5 u</code>), mientras que el Peor Modelo apenas cambia un <strong>+5.9 %</strong> (<code>341.6 u</code> $
+ightarrow$ <code>361.9 u</code>), siendo incapaz de capturar la elasticidad precio-demanda.</li>
+</ul>
+</li>
+<li><p><strong>Conclusión del Punto 7 (Explicabilidad mediante Permutation Feature Importance):</strong></p>
+<ul>
+<li>En los modelos ganadores (<code>Rank_01_SVR_poly_C5.0</code> y <code>Rank_03_SVR_rbf_C5.0</code>), las variables con mayor impacto en la reducción del RMSE son la identidad y categoría del producto (<code>product_id</code>: +1384.39 u; <code>categoria</code>: +1152.72 u), seguidas del indicador de día feriado (<code>holiday_flag</code>: +1070.91 u), el descuento (<code>discount</code>: +1051.87 u) y el efecto fin de semana (<code>es_fin_de_semana</code>: +124.99 u). En cambio, en el Peor Modelo (<code>Rank_24_SVR_sigmoid_C0.1</code>), la importancia de todas las variables es cercana a cero (máximo +20.9 u), confirmando que un SVR subajustado no extrae señal de las variables predictoras.</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h4 id="8.3-Recomendaciones-T%C3%A9cnicas-y-de-Negocio-por-Cada-Punto">8.3 Recomendaciones Técnicas y de Negocio por Cada Punto<a class="anchor-link" href="#8.3-Recomendaciones-T%C3%A9cnicas-y-de-Negocio-por-Cada-Punto">¶</a></h4><ol>
+<li><strong>Recomendación sobre Preprocesamiento y Escala del Objetivo (Puntos 1 y 2):</strong><ul>
+<li>En problemas de demanda retail multi-producto con alta asimetría (ventas desde decenas hasta decenas de miles de unidades), se recomienda mantener siempre el escalado estandarizado de predictores (<code>StandardScaler</code>) junto con <code>TransformedTargetRegressor(func=np.log1p, inverse_func=np.expm1)</code> en SVR, ya que evita que los productos de alto volumen dominen la función de pérdida $\epsilon$-insensible.</li>
+</ul>
+</li>
+<li><strong>Recomendación sobre Selección de Kernel y Fine Tuning de Hiperparámetros (Punto 3 de Experimentación):</strong><ul>
+<li>Se recomienda <strong>descartar el kernel Sigmoide con valores bajos de $C$</strong> para regresión de demanda y priorizar los kernels <strong>Polinómico de grado 2 (<code>poly</code>, $C \in [5, 10]$)</strong> y <strong>RBF Gaussiano (<code>rbf</code>, $C \in [5, 100], \gamma pprox 0.02$)</strong>, validando siempre mediante $K$-Fold Cross-Validation (<code>RMSE_CV</code> vs. <code>RMSE_Train_CV</code>) para vigilar la brecha de sobreajuste.</li>
+</ul>
+</li>
+<li><strong>Recomendación sobre Gestión del Ciclo de Vida en MLflow:</strong><ul>
+<li>Se recomienda registrar únicamente los modelos que superen el umbral de calidad ($R^2 &gt; 0.90$) en el <strong>Model Registry (<code>Models</code>)</strong> de MLflow para mantener limpio el catálogo de despliegue, conservando las 24 corridas completas en <code>Runs</code> como respaldo auditable de experimentación.</li>
+</ul>
+</li>
+<li><strong>Recomendación Operativa para Planeación de Inventario y Promociones (Puntos 3 a 7):</strong><ul>
+<li>Utilizar <code>Rank_01_SVR_poly_C5.0</code> integrado en la función <code>predecir_por_producto_y_fecha()</code> y <code>predecir_nuevo_sample()</code> para programar órdenes de reabastecimiento con al menos 48 horas de anticipación antes de fines de semana, feriados o campañas de descuento ($\ge 10\%$), dado que <code>holiday_flag</code> y <code>discount</code> son los dos impulsores exógenos más fuertes de quiebres de stock.</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h4 id="8.4-Referencias-Bibliogr%C3%A1ficas-(Formato-APA-7.%C2%AA-Edici%C3%B3n)">8.4 Referencias Bibliográficas (Formato APA 7.ª Edición)<a class="anchor-link" href="#8.4-Referencias-Bibliogr%C3%A1ficas-(Formato-APA-7.%C2%AA-Edici%C3%B3n)">¶</a></h4><ul>
+<li>Breiman, L. (2001). Random forests. <em>Machine Learning</em>, 45(1), 5–32. <a href="https://doi.org/10.1023/A:1010933404324">https://doi.org/10.1023/A:1010933404324</a></li>
+<li>Cortes, C., &amp; Vapnik, V. (1995). Support-vector networks. <em>Machine Learning</em>, 20(3), 273–297. <a href="https://doi.org/10.1007/BF00994018">https://doi.org/10.1007/BF00994018</a></li>
+<li>Dingdong Limited. (2024). <em>FreshRetailNet-50K: A benchmark dataset for fresh retail demand forecasting and censored demand recovery</em> [Conjunto de datos]. Hugging Face. <a href="https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K">https://huggingface.co/datasets/Dingdong-Inc/FreshRetailNet-50K</a></li>
+<li>Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., Blondel, M., Prettenhofer, P., Weiss, R., Dubourg, V., Vanderplas, J., Passos, A., Cournapeau, D., Brucher, M., Perrot, M., &amp; Duchesnay, E. (2011). Scikit-learn: Machine learning in Python. <em>Journal of Machine Learning Research</em>, 12, 2825–2830.</li>
+<li>Raschka, S., &amp; Mirjalili, V. (2017). <em>Python machine learning: Machine learning and deep learning with Python, scikit-learn, and TensorFlow</em> (2.ª ed.). Packt Publishing.</li>
+<li>Smola, A. J., &amp; Schölkopf, B. (2004). A tutorial on support vector regression. <em>Statistics and Computing</em>, 14(3), 199–222. <a href="https://doi.org/10.1023/B:STCO.0000035301.49549.88">https://doi.org/10.1023/B:STCO.0000035301.49549.88</a></li>
+<li>Zaharia, M., Chen, A., Davidson, A., Ghodsi, A., Hong, S. A., Konwinski, A., Murching, S., Nykodym, T., Parkhe, P., Xie, M., Zumar, C., &amp; Walz, M. (2018). Accelerating the machine learning lifecycle with MLflow. <em>IEEE Data Engineering Bulletin</em>, 41(4), 39–45.</li>
+</ul>
 </div>
 </div>
 </div>

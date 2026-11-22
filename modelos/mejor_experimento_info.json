@@ -105,5 +105,20 @@
       "Tiempo_ms": 48.4,
       "Archivo_Modelo": "Rank_14_SVR_sigmoid_C100.0.pkl"
     }
+  },
+  "peor_experimento_svm": {
+    "run_id": "326d113947c545a39e4d2129b8a912fe",
+    "Experimento": "Rank_24_SVR_sigmoid_C0.1",
+    "ranking_cv": 24,
+    "Kernel": "sigmoid",
+    "C": 0.1,
+    "RMSE_Test": 2151.42,
+    "MAE_Test": 984.56,
+    "R2_Test": -0.1147,
+    "RMSE_CV": 2598.82,
+    "STD_CV": 515.76,
+    "RMSE_Train_CV": 2644.79,
+    "Tiempo_ms": 44.5,
+    "Archivo_Modelo": "Rank_24_SVR_sigmoid_C0.1.pkl"
   }
 }
