@@ -7883,6 +7883,20 @@ a.anchor-link {
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=4b522b23">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>Conclusión del Punto 1 (Configuración de MLflow):</strong> Se estableció con éxito el servidor local de seguimiento en SQLite (<code>mlflow.db</code>) y el directorio de artefactos (<code>mlruns/</code>) bajo el experimento <code>SVR_Prediccion_Demanda_Retail</code>, garantizando la persistencia de parámetros, métricas y modelos.</p>
+<p><strong>Recomendación del Punto 1:</strong> Utilizar siempre un <em>backend</em> relacional (<code>sqlite:///mlflow.db</code>) en lugar de almacenamiento plano cuando se gestionen múltiples corridas y se requiera registrar modelos en el <em>Model Registry</em> (<code>Models</code>).</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=cb2f2b48">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7934,6 +7948,20 @@ a.anchor-link {
 <pre>Datos limpios: 600 filas (0 nulos, 0 duplicados) | Entrenamiento: 480 | Prueba: 120
 </pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=579988d2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>Conclusión del Punto 2 (Limpieza y Preprocesamiento):</strong> La limpieza verificó <strong>600 registros íntegros (0 nulos y 0 duplicados)</strong> para los 10 productos durante 60 días (<code>2024-03-28</code> a <code>2024-05-26</code>). La partición estratificada por <code>product_id</code> (480 entrenamiento / 120 prueba) junto con <code>StandardScaler</code> y <code>OneHotEncoder</code> aseguró que todos los productos estén equitativamente representados.</p>
+<p><strong>Recomendación del Punto 2:</strong> Mantener siempre la estratificación por producto (<code>stratify=X['product_id']</code>) al dividir series multi-ítem para evitar que productos de alta o baja demanda queden subrepresentados en la validación.</p>
+</blockquote>
 </div>
 </div>
 </div>
@@ -8065,6 +8093,20 @@ a.anchor-link {
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=e51c4822">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>Conclusión del Punto 3 (Fine Tuning de las 24 Combinaciones — 4 Kernels × 6 Valores de $C$):</strong> El ajuste fino redujo el error cuadrático medio en prueba desde <strong>2151.42 u</strong> (<code>Rank_24_SVR_sigmoid_C0.1</code>, $R^2 = -0.1147$) hasta <strong>574.37 u</strong> (<code>Rank_01_SVR_poly_C5.0</code>, $R^2 = 0.9206$), logrando una mejora del <strong>73.3 % en RMSE</strong>. Los 4 mejores modelos (<code>Rank_01</code> a <code>Rank_04</code>) superaron $R^2 &gt; 0.908$ y quedaron registrados con su nombre descriptivo en la pestaña <strong><code>Models</code></strong> de MLflow.</p>
+<p><strong>Recomendación del Punto 3:</strong> Emplear validación cruzada de 5 <em>folds</em> (<code>RMSE_CV</code> y <code>STD_CV</code>) en combinación con transformación logarítmica del objetivo (<code>np.log1p</code> / <code>np.expm1</code>) para seleccionar el parámetro $C$ óptimo ($C = 5.0$) sin caer en sobreajuste.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=ff1f666f">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8144,6 +8186,20 @@ a.anchor-link {
 </div>
 </div>
 </div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=52c8766f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>Conclusión del Punto 4 (Gráficas Comparativas de las 24 Combinaciones y Efecto por Kernel):</strong> Las gráficas evidencian que los kernels no lineales suaves (<strong>Polinómico $d=2$</strong> con RMSE = 574.37 u y <strong>RBF Gaussiano</strong> con RMSE = 609.45 u en $C=5.0$) superan ampliamente al kernel <strong>Lineal</strong> (mejor RMSE = 953.35 u) y al <strong>Sigmoide</strong> (mejor RMSE = 1055.43 u en $C=100.0$, y peor global en $C=0.1$ con 2151.42 u).</p>
+<p><strong>Recomendación del Punto 4:</strong> Priorizar kernels Polinómico ($d=2$) y RBF en un rango de regularización $C \in [5.0, 10.0]$ para datos comerciales con interacciones no lineales entre promociones y calendario, descartando el kernel Sigmoide con $C \le 1.0$.</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=544f143b">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -8201,6 +8257,20 @@ a.anchor-link {
 Rank_24_SVR_sigmoid_C0.1 sigmoid   0.1    2151.42    984.56  -0.1147  2598.82
 </pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=b5b1f854">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<blockquote>
+<p><strong>Conclusión del Punto 5 (Exportación de los Mejores Modelos y del Peor Modelo):</strong> Se serializaron los 4 modelos campeones por kernel (<code>mejor_svm_polinomico.pkl</code>, <code>mejor_svm_rbf_gaussiano.pkl</code>, <code>mejor_svm_lineal.pkl</code>, <code>mejor_svm_sigmoide.pkl</code>) junto con el modelo ganador global (<code>Rank_01_SVR_poly_C5.0</code>) y el peor modelo (<code>Rank_24_SVR_sigmoid_C0.1</code>) para contrastar su desempeño en inferencia.</p>
+<p><strong>Recomendación del Punto 5:</strong> Conservar tanto el mejor modelo como la línea base deficiente (peor modelo) en archivos <code>.pkl</code> con su metadato JSON (<code>mejor_experimento_info.json</code>) para auditar en producción la ganancia real obtenida por el <em>Fine Tuning</em>.</p>
+</blockquote>
 </div>
 </div>
 </div>
