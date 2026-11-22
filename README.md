@@ -1,49 +1,55 @@
-﻿# Práctica 2: Comparativa de Kernels SVM y Seguimiento con MLflow
+# Práctica 2: Experimentos en MLflow y Predicción de Demanda con RF y SVM
 
-## Objetivo
-Predecir la demanda continua y riesgo de desabastecimiento en retail (**FreshRetailNet-50K**) comparando 4 kernels de **Support Vector Regression (SVR)**, evaluados bajo la métrica **RMSE** y registrados en **MLflow**.
+**Dataset:** FreshRetailNet-50K (600 registros, 10 productos) | **Métrica:** RMSE, MAE y R²
 
----
+## Estructura en 2 Cuadernos (`.ipynb`)
 
-## Guion Técnico de Implementación
+1. **[`Experimentos_MLflow.ipynb`](Experimentos_MLflow.ipynb)** (Cuaderno 1 — Solo MLflow y Experimentos):
+   - Ejecuta y registra **6 experimentos descriptivos** (4 kernels de SVM + 2 configuraciones de Random Forest) evaluando **RMSE**, MAE y R².
+   - Guarda todos los modelos, parámetros y figuras en **MLflow** (`mlflow.db` / `mlruns/`) y en la carpeta local [`modelos/`](modelos).
+   - Selecciona y exporta automáticamente el mejor experimento de cada familia (`mejor_modelo_rf.pkl` y `mejor_modelo_svm.pkl`).
 
-- **Datos:** 600 registros diarios de ventas para 10 productos de retail con variables exógenas (`discount`, `stock_en_momento`, `holiday_flag`, `temperatura`).
-- **Métrica Clave:** **RMSE (Root Mean Squared Error)** en unidades reales de demanda, complementado con MAE y $R^2$.
-- **Preprocesamiento:** Pipeline con `StandardScaler` (numéricas) y `OneHotEncoder` (categorías).
-- **Experimentos Registrados en MLflow (5 Runs Descriptivos):**
-  1. `SVR_Kernel_Polinomico_Optimizado_GridSearchCV` — **RMSE: 953.5 u** | $R^2: 0.66$ (Mejor Modelo).
-  2. `SVR_Kernel_Polinomico_d3_Demanda` — **RMSE: 972.1 u** | $R^2: 0.65$.
-  3. `SVR_Kernel_Lineal_Demanda` — **RMSE: 1188.8 u** | $R^2: 0.48$.
-  4. `SVR_Kernel_RBF_Gaussiano_Demanda` — **RMSE: 1207.3 u** | $R^2: 0.46$.
-  5. `SVR_Kernel_Sigmoide_Demanda` — **RMSE: Divergente** por falla de condición de Mercer.
-- **Artefactos en MLflow:**
-  - Gráficos individuales de Demanda Real vs. Predicha.
-  - Gráfica comparativa de barras de RMSE.
-  - Modelos SVR empaquetados (`model.pkl` y metadata `MLmodel`).
-- **Inferencia:** Función `predecir_demanda()` para nuevos escenarios de retail.
-- **Explicabilidad:** *Permutation Feature Importance* evaluando el impacto directo en el incremento del RMSE.
+2. **[`Practica2.ipynb`](Practica2.ipynb)** (Cuaderno 2 — Solo Predicción y Explicabilidad con RF y SVM):
+   - Carga los modelos ganadores seleccionados en MLflow (`Exp6_RandomForest_Optimizado_300` y `Exp2_SVM_Kernel_Polinomico_d2`).
+   - Verifica que las predicciones por producto respeten la escala real de demanda sin extrapolaciones fuera de rango.
+   - Ejecuta predicciones comparativas con **Random Forest** y **SVM** para nuevos samples individuales y en lote (batch de 10 productos), incluyendo explicabilidad con *Permutation Feature Importance*.
 
 ---
 
-## Visualizar MLflow en el Navegador
-Ejecutar en la terminal de PowerShell:
+## Experimentos Guardados en MLflow (Ordenados por Mejor RMSE)
+
+| Experimento en MLflow | Familia | RMSE (unidades) | MAE (unidades) | R² Score | Selección |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **`Exp5_RandomForest_Base_100`** | Random Forest | **537.39 u** | **309.93 u** | **0.9305** | **Mejor Experimento Global y Mejor RF** |
+| **`Exp6_RandomForest_Optimizado_300`** | Random Forest | 543.08 u | 311.12 u | 0.9290 | RF Profundidad 15 |
+| **`Exp2_SVM_Kernel_Polinomico_d2`** | SVM | **574.37 u** | **303.42 u** | **0.9206** | **Mejor Experimento SVM** |
+| **`Exp3_SVM_Kernel_RBF_Gaussiano`** | SVM | 609.45 u | 313.09 u | 0.9106 | Kernel Radial Gaussiano |
+| **`Exp1_SVM_Kernel_Lineal`** | SVM | 961.96 u | 400.86 u | 0.7771 | Kernel Lineal |
+| **`Exp4_SVM_Kernel_Sigmoide`** | SVM | 1399.89 u | 540.34 u | 0.5281 | Kernel Sigmoide |
+
+---
+
+## Cómo Abrir MLflow UI
+Desde la raíz del repositorio:
 ```powershell
-mlflow server --backend-store-uri sqlite:///mlflow.db
+.\.venv\Scripts\python.exe -m mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./mlruns
 ```
-Abrir en el navegador: **`http://127.0.0.1:5000`** para inspeccionar la tabla de métricas, los 5 modelos registrados y sus artefactos.
+Luego abrir **`http://127.0.0.1:5000`** en el navegador.
 
 ---
 
 ## Estructura del Repositorio
 ```text
 .
-├── Practica2.ipynb        # Notebook principal (SVR + MLflow)
+├── Experimentos_MLflow.ipynb   # Cuaderno 1: experimentos + registro en MLflow
+├── Practica2.ipynb             # Cuaderno 2: predicción y explicabilidad
 ├── README.md
-├── requirements.txt       # Dependencias (pip install -r requirements.txt)
-├── data/                  # sales_history.csv, inventory.csv
-├── artefactos_mlflow/     # Gráficos Real vs. Predicho generados por el notebook
-├── mlruns/                # Artefactos y modelos de MLflow
-├── mlflow.db              # Base SQLite de MLflow
-└── docs/                  # Guía de la práctica (.docx)
+├── requirements.txt            # pip install -r requirements.txt
+├── data/                       # sales_history.csv, inventory.csv
+├── modelos/                    # Modelos .pkl y resumen de experimentos
+├── artefactos_mlflow/          # Gráficos de evaluación por experimento
+├── mlruns/                     # Artefactos y modelos de MLflow
+├── mlflow.db                   # Base SQLite de MLflow
+└── docs/                       # Guía de la práctica (.docx)
 ```
-> El notebook debe ejecutarse desde la raíz del repositorio para que las rutas relativas funcionen.
+> Ejecutar los notebooks desde la raíz del repositorio para que las rutas relativas funcionen.

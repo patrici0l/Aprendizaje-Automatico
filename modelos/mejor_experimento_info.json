@@ -1,0 +1,32 @@
+{
+  "mejor_experimento_global": {
+    "run_id": "70f69aef611e46bfa6ef9c647e744db6",
+    "Experimento": "Exp5_RandomForest_Base_100",
+    "Familia": "RandomForest",
+    "RMSE": 537.39,
+    "MAE": 309.93,
+    "R2": 0.9305,
+    "Tiempo_ms": 83.0,
+    "Archivo_Modelo": "Exp5_RandomForest_Base_100.pkl"
+  },
+  "mejor_experimento_rf": {
+    "run_id": "70f69aef611e46bfa6ef9c647e744db6",
+    "Experimento": "Exp5_RandomForest_Base_100",
+    "Familia": "RandomForest",
+    "RMSE": 537.39,
+    "MAE": 309.93,
+    "R2": 0.9305,
+    "Tiempo_ms": 83.0,
+    "Archivo_Modelo": "Exp5_RandomForest_Base_100.pkl"
+  },
+  "mejor_experimento_svm": {
+    "run_id": "519dd65fca4545e5b614853771fa26a8",
+    "Experimento": "Exp2_SVM_Kernel_Polinomico_d2",
+    "Familia": "SVM",
+    "RMSE": 574.37,
+    "MAE": 303.42,
+    "R2": 0.9206,
+    "Tiempo_ms": 19.9,
+    "Archivo_Modelo": "Exp2_SVM_Kernel_Polinomico_d2.pkl"
+  }
+}
