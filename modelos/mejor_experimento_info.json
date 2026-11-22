@@ -1,32 +1,35 @@
 {
   "mejor_experimento_global": {
-    "run_id": "70f69aef611e46bfa6ef9c647e744db6",
-    "Experimento": "Exp5_RandomForest_Base_100",
+    "run_id": "60fb8ab7c5df4fa49f571a963076a56d",
+    "Experimento": "Exp17_RandomForest_Base_100",
     "Familia": "RandomForest",
+    "Kernel": "RandomForest",
     "RMSE": 537.39,
     "MAE": 309.93,
     "R2": 0.9305,
-    "Tiempo_ms": 83.0,
-    "Archivo_Modelo": "Exp5_RandomForest_Base_100.pkl"
+    "Tiempo_ms": 112.0,
+    "Archivo_Modelo": "Exp17_RandomForest_Base_100.pkl"
   },
   "mejor_experimento_rf": {
-    "run_id": "70f69aef611e46bfa6ef9c647e744db6",
-    "Experimento": "Exp5_RandomForest_Base_100",
+    "run_id": "60fb8ab7c5df4fa49f571a963076a56d",
+    "Experimento": "Exp17_RandomForest_Base_100",
     "Familia": "RandomForest",
+    "Kernel": "RandomForest",
     "RMSE": 537.39,
     "MAE": 309.93,
     "R2": 0.9305,
-    "Tiempo_ms": 83.0,
-    "Archivo_Modelo": "Exp5_RandomForest_Base_100.pkl"
+    "Tiempo_ms": 112.0,
+    "Archivo_Modelo": "Exp17_RandomForest_Base_100.pkl"
   },
   "mejor_experimento_svm": {
-    "run_id": "519dd65fca4545e5b614853771fa26a8",
-    "Experimento": "Exp2_SVM_Kernel_Polinomico_d2",
+    "run_id": "cab76572faa94179a5da96e13aaaeebf",
+    "Experimento": "Exp06_SVM_Polinomico_d2_C5",
     "Familia": "SVM",
+    "Kernel": "Polinomico",
     "RMSE": 574.37,
     "MAE": 303.42,
     "R2": 0.9206,
-    "Tiempo_ms": 19.9,
-    "Archivo_Modelo": "Exp2_SVM_Kernel_Polinomico_d2.pkl"
+    "Tiempo_ms": 26.9,
+    "Archivo_Modelo": "Exp06_SVM_Polinomico_d2_C5.pkl"
   }
 }
