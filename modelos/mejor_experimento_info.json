@@ -1,35 +1,81 @@
 {
   "mejor_experimento_global": {
-    "run_id": "60fb8ab7c5df4fa49f571a963076a56d",
-    "Experimento": "Exp17_RandomForest_Base_100",
-    "Familia": "RandomForest",
-    "Kernel": "RandomForest",
-    "RMSE": 537.39,
-    "MAE": 309.93,
-    "R2": 0.9305,
-    "Tiempo_ms": 112.0,
-    "Archivo_Modelo": "Exp17_RandomForest_Base_100.pkl"
-  },
-  "mejor_experimento_rf": {
-    "run_id": "60fb8ab7c5df4fa49f571a963076a56d",
-    "Experimento": "Exp17_RandomForest_Base_100",
-    "Familia": "RandomForest",
-    "Kernel": "RandomForest",
-    "RMSE": 537.39,
-    "MAE": 309.93,
-    "R2": 0.9305,
-    "Tiempo_ms": 112.0,
-    "Archivo_Modelo": "Exp17_RandomForest_Base_100.pkl"
-  },
-  "mejor_experimento_svm": {
-    "run_id": "cab76572faa94179a5da96e13aaaeebf",
-    "Experimento": "Exp06_SVM_Polinomico_d2_C5",
-    "Familia": "SVM",
+    "run_id": "7a91f4dfffc64dffaa9afb566db38fef",
+    "Experimento": "Exp07_SVM_Polinomico_C5",
     "Kernel": "Polinomico",
+    "C": 5.0,
     "RMSE": 574.37,
     "MAE": 303.42,
     "R2": 0.9206,
-    "Tiempo_ms": 26.9,
-    "Archivo_Modelo": "Exp06_SVM_Polinomico_d2_C5.pkl"
+    "Tiempo_ms": 22.5,
+    "Archivo_Modelo": "Exp07_SVM_Polinomico_C5.pkl"
+  },
+  "mejor_experimento_svm": {
+    "run_id": "7a91f4dfffc64dffaa9afb566db38fef",
+    "Experimento": "Exp07_SVM_Polinomico_C5",
+    "Kernel": "Polinomico",
+    "C": 5.0,
+    "RMSE": 574.37,
+    "MAE": 303.42,
+    "R2": 0.9206,
+    "Tiempo_ms": 22.5,
+    "Archivo_Modelo": "Exp07_SVM_Polinomico_C5.pkl"
+  },
+  "segundo_mejor_svm": {
+    "run_id": "9b907ef298ae4559b763224fb65f198d",
+    "Experimento": "Exp11_SVM_RBF_Gaussiano_C5",
+    "Kernel": "RBF_Gaussiano",
+    "C": 5.0,
+    "RMSE": 609.45,
+    "MAE": 313.09,
+    "R2": 0.9106,
+    "Tiempo_ms": 27.2,
+    "Archivo_Modelo": "Exp11_SVM_RBF_Gaussiano_C5.pkl"
+  },
+  "mejores_por_kernel": {
+    "Lineal": {
+      "run_id": "0405f4033e934a3089cc4ad7a3dfcf13",
+      "Experimento": "Exp03_SVM_Lineal_C5",
+      "Kernel": "Lineal",
+      "C": 5.0,
+      "RMSE": 953.35,
+      "MAE": 400.2,
+      "R2": 0.7811,
+      "Tiempo_ms": 48.3,
+      "Archivo_Modelo": "Exp03_SVM_Lineal_C5.pkl"
+    },
+    "Polinomico": {
+      "run_id": "7a91f4dfffc64dffaa9afb566db38fef",
+      "Experimento": "Exp07_SVM_Polinomico_C5",
+      "Kernel": "Polinomico",
+      "C": 5.0,
+      "RMSE": 574.37,
+      "MAE": 303.42,
+      "R2": 0.9206,
+      "Tiempo_ms": 22.5,
+      "Archivo_Modelo": "Exp07_SVM_Polinomico_C5.pkl"
+    },
+    "RBF_Gaussiano": {
+      "run_id": "9b907ef298ae4559b763224fb65f198d",
+      "Experimento": "Exp11_SVM_RBF_Gaussiano_C5",
+      "Kernel": "RBF_Gaussiano",
+      "C": 5.0,
+      "RMSE": 609.45,
+      "MAE": 313.09,
+      "R2": 0.9106,
+      "Tiempo_ms": 27.2,
+      "Archivo_Modelo": "Exp11_SVM_RBF_Gaussiano_C5.pkl"
+    },
+    "Sigmoide": {
+      "run_id": "17bcf0cae61d46c689094836346fb359",
+      "Experimento": "Exp16_SVM_Sigmoide_C10",
+      "Kernel": "Sigmoide",
+      "C": 10.0,
+      "RMSE": 1076.84,
+      "MAE": 445.1,
+      "R2": 0.7207,
+      "Tiempo_ms": 13.1,
+      "Archivo_Modelo": "Exp16_SVM_Sigmoide_C10.pkl"
+    }
   }
 }
