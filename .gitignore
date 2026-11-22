@@ -1,0 +1,14 @@
+﻿# Entorno y caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+
+# SO / editores
+.DS_Store
+Thumbs.db
+
+# Practica 1 (repo independiente de Fernando)
+Aprendizaje/pratica-analisis-retail/
