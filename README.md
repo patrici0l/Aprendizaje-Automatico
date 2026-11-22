@@ -1,12 +1,12 @@
-# Práctica 2: Máquinas de Soporte Vectorial (SVM) – Fine Tuning (4 Kernels × 4 Valores de $C$ = 16 Combinaciones) y MLflow
+﻿# Práctica 2: Máquinas de Soporte Vectorial (SVM) – Fine Tuning (4 Kernels × 6 Valores de $C$ = 24 Combinaciones) y MLflow
 
 **Dataset:** FreshRetailNet-50K (600 registros, 10 productos, 60 días: `2024-03-28` a `2024-05-26`) | **Métricas:** RMSE, MAE, $R^2$ y Tiempo (ms)
 
 ## Estructura en 2 Cuadernos (`.ipynb` y `.html`)
 
-1. **[`Experimentos_MLflow.ipynb`](Experimentos_MLflow.ipynb)** / **[`Experimentos_MLflow.html`](Experimentos_MLflow.html)** (Cuaderno 1 — Limpieza, 16 Combinaciones en MLflow y Registro de *Models*):
+1. **[`Experimentos_MLflow.ipynb`](Experimentos_MLflow.ipynb)** / **[`Experimentos_MLflow.html`](Experimentos_MLflow.html)** (Cuaderno 1 — Limpieza, 24 Combinaciones en MLflow y Registro de *Models*):
    - Realiza la limpieza de datos (verificación de nulos y duplicados), ingeniería de variables temporales desde `fecha_venta`, escalado (`StandardScaler`) y codificación (`OneHotEncoder`).
-   - Evalúa **4 tipos de kernel** (`Lineal`, `Polinomico`, `RBF_Gaussiano`, `Sigmoide`) × **4 valores de regularización $C \in \{0.1, 1.0, 5.0, 10.0\}$**, registrando las **16 combinaciones exactas en MLflow** con sus 16 gráficas individuales de evaluación, gráficas comparativas y datasets.
+   - Evalúa **4 tipos de kernel** (`Lineal`, `Polinomico`, `RBF_Gaussiano`, `Sigmoide`) × **4 valores de regularización $C \in \{0.1, 1.0, 5.0, 10.0\}$**, registrando las **24 combinaciones exactas en MLflow** con sus 16 gráficas individuales de evaluación, gráficas comparativas y datasets.
    - Selecciona los mejores modelos y los registra oficialmente en la sección **Models (Model Registry)** de MLflow:
      - **`Mejor_Modelo_SVM_Global`** (`Exp07_SVM_Polinomico_C5` — RMSE: **574.37 u** | MAE: **303.42 u** | $R^2$: **0.9206**)
      - **`Mejor_SVM_Polinomico`** (`Exp07_SVM_Polinomico_C5`)
@@ -22,7 +22,7 @@
 
 ---
 
-## Tabla de las 16 Combinaciones Registradas en MLflow (Ordenadas por Mejor RMSE)
+## Tabla de las 24 Combinaciones Registradas en MLflow (Ordenadas por Mejor RMSE)
 
 | # | Experimento en MLflow | Kernel | $C$ | RMSE (u) | MAE (u) | $R^2$ | Tiempo (ms) | Registro en *Models* |
 | :-: | :--- | :---: | :-: | :---: | :---: | :---: | :---: | :--- |
@@ -54,3 +54,4 @@ Luego abrir **`http://127.0.0.1:5000`** en el navegador:
 - En **Experiments → `FineTuning_16_SVM_Kernels_x_C_Retail` → Training runs**: se visualizan las **16 pruebas**, sus gráficas de métricas y sus artefactos.
 - En **Experiments → Datasets**: se visualizan los datasets registrados (`FreshRetailNet_50K_sales_history` e `inventory`).
 - En **Models** (barra lateral): se visualizan los **5 mejores modelos registrados** (`Mejor_Modelo_SVM_Global` y el mejor de cada kernel).
+
