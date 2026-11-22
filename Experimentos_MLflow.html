@@ -7839,18 +7839,10 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">sqlite3</span><span class="o">,</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow.sklearn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span><span class="o">,</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mlflow</span><span class="o">,</span><span class="w"> </span><span class="nn">mlflow.sklearn</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">train_test_split</span><span class="p">,</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">cross_validate</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.compose</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColumnTransformer</span><span class="p">,</span> <span class="n">TransformedTargetRegressor</span>
@@ -7859,23 +7851,17 @@ a.anchor-link {
 <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span>
 
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">MODELS_DIR</span><span class="p">,</span> <span class="n">ARTIFACTS_DIR</span> <span class="o">=</span> <span class="s1">'modelos'</span><span class="p">,</span> <span class="s1">'artefactos_mlflow'</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ARTIFACTS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">BASE_DIR</span> <span class="o">=</span> <span class="s1">'.'</span>
-<span class="n">MODELS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'modelos'</span><span class="p">)</span>
-<span class="n">ARTIFACTS_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'artefactos_mlflow'</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">ARTIFACTS_DIR</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">DB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'mlflow.db'</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'</span><span class="se">\\</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
-<span class="n">MLRUNS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'mlruns'</span><span class="p">))</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'</span><span class="se">\\</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+<span class="n">DB_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'mlflow.db'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'</span><span class="se">\\</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
+<span class="n">MLRUNS_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'mlruns'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'</span><span class="se">\\</span><span class="s1">'</span><span class="p">,</span> <span class="s1">'/'</span><span class="p">)</span>
 <span class="n">mlflow</span><span class="o">.</span><span class="n">set_tracking_uri</span><span class="p">(</span><span class="sa">f</span><span class="s2">"sqlite:///</span><span class="si">{</span><span class="n">DB_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="n">EXPERIMENT_NAME</span> <span class="o">=</span> <span class="s2">"SVR_Prediccion_Demanda_Retail"</span>
-<span class="n">exp</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">get_experiment_by_name</span><span class="p">(</span><span class="n">EXPERIMENT_NAME</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">exp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">get_experiment_by_name</span><span class="p">(</span><span class="n">EXPERIMENT_NAME</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">mlflow</span><span class="o">.</span><span class="n">create_experiment</span><span class="p">(</span><span class="n">EXPERIMENT_NAME</span><span class="p">,</span> <span class="n">artifact_location</span><span class="o">=</span><span class="sa">f</span><span class="s2">"file:///</span><span class="si">{</span><span class="n">MLRUNS_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">mlflow</span><span class="o">.</span><span class="n">set_experiment</span><span class="p">(</span><span class="n">EXPERIMENT_NAME</span><span class="p">)</span>
-
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">'seaborn-v0_8-whitegrid'</span> <span class="k">if</span> <span class="s1">'seaborn-v0_8-whitegrid'</span> <span class="ow">in</span> <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">available</span> <span class="k">else</span> <span class="s1">'default'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MLflow </span><span class="si">{</span><span class="n">mlflow</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2"> activo | Experimento: '</span><span class="si">{</span><span class="n">EXPERIMENT_NAME</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
 </pre></div>
@@ -7915,12 +7901,8 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_sales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">,</span> <span class="s1">'sales_history.csv'</span><span class="p">))</span>
-<span class="n">df_inv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s1">'data'</span><span class="p">,</span> <span class="s1">'inventory.csv'</span><span class="p">))</span>
-
-<span class="n">nulos_antes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df_sales</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-<span class="n">duplicados_antes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df_sales</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'fecha_venta'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-<span class="n">df_sales</span> <span class="o">=</span> <span class="n">df_sales</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'fecha_venta'</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'fecha_venta'</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">df_sales</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'data/sales_history.csv'</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'fecha_venta'</span><span class="p">])</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'fecha_venta'</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_inv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'data/inventory.csv'</span><span class="p">)</span>
 
 <span class="n">df_sales</span><span class="p">[</span><span class="s1">'fecha'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_sales</span><span class="p">[</span><span class="s1">'fecha_venta'</span><span class="p">])</span>
 <span class="n">df_sales</span><span class="p">[</span><span class="s1">'dia_semana'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_sales</span><span class="p">[</span><span class="s1">'fecha'</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">dayofweek</span>
@@ -7928,23 +7910,15 @@ a.anchor-link {
 
 <span class="n">features_num</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'stock_en_momento'</span><span class="p">,</span> <span class="s1">'discount'</span><span class="p">,</span> <span class="s1">'temperatura'</span><span class="p">,</span> <span class="s1">'dia_semana'</span><span class="p">,</span> <span class="s1">'es_fin_de_semana'</span><span class="p">,</span> <span class="s1">'holiday_flag'</span><span class="p">]</span>
 <span class="n">features_cat</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'product_id'</span><span class="p">,</span> <span class="s1">'categoria'</span><span class="p">]</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">df_sales</span><span class="p">[</span><span class="n">features_num</span> <span class="o">+</span> <span class="n">features_cat</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">X</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df_sales</span><span class="p">[</span><span class="n">features_num</span> <span class="o">+</span> <span class="n">features_cat</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">product_id</span><span class="o">=</span><span class="n">df_sales</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">df_sales</span><span class="p">[</span><span class="s1">'cantidad_vendida'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
-<span class="n">preprocesador</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
-    <span class="n">transformers</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="s1">'num'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">features_num</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">'cat'</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">features_cat</span><span class="p">)</span>
-    <span class="p">]</span>
-<span class="p">)</span>
-
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
-    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">]</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Limpieza completada -&gt; Nulos: </span><span class="si">{</span><span class="n">nulos_antes</span><span class="si">}</span><span class="s2"> | Duplicados: </span><span class="si">{</span><span class="n">duplicados_antes</span><span class="si">}</span><span class="s2"> | Registros: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_sales</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Entrenamiento: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> muestras | Prueba: </span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> muestras"</span><span class="p">)</span>
+<span class="n">preprocesador</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">([</span>
+    <span class="p">(</span><span class="s1">'num'</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">features_num</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'cat'</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">features_cat</span><span class="p">)</span>
+<span class="p">])</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">X</span><span class="p">[</span><span class="s1">'product_id'</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Datos limpios: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_sales</span><span class="p">)</span><span class="si">}</span><span class="s2"> filas (0 nulos, 0 duplicados) | Entrenamiento: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s2"> | Prueba: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7957,8 +7931,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Limpieza completada -&gt; Nulos: 0 | Duplicados: 0 | Registros: 600
-Entrenamiento: 480 muestras | Prueba: 120 muestras
+<pre>Datos limpios: 600 filas (0 nulos, 0 duplicados) | Entrenamiento: 480 | Prueba: 120
 </pre>
 </div>
 </div>
@@ -7989,144 +7962,65 @@ Entrenamiento: 480 muestras | Prueba: 120 muestras
 <div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">construir_pipeline_svr</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">c_val</span><span class="p">):</span>
-    <span class="n">extras</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
-    <span class="k">if</span> <span class="n">kernel</span> <span class="o">==</span> <span class="s1">'poly'</span><span class="p">:</span>
-        <span class="n">extras</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'degree'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'gamma'</span><span class="p">:</span> <span class="s1">'scale'</span><span class="p">})</span>
-    <span class="k">elif</span> <span class="n">kernel</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">:</span>
-        <span class="n">extras</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'gamma'</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">})</span>
-    <span class="k">elif</span> <span class="n">kernel</span> <span class="o">==</span> <span class="s1">'sigmoid'</span><span class="p">:</span>
-        <span class="n">extras</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">'gamma'</span><span class="p">:</span> <span class="mf">0.005</span><span class="p">,</span> <span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">})</span>
-    <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'prep'</span><span class="p">,</span> <span class="n">preprocesador</span><span class="p">),</span> <span class="p">(</span><span class="s1">'reg'</span><span class="p">,</span> <span class="n">SVR</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">c_val</span><span class="p">,</span> <span class="o">**</span><span class="n">extras</span><span class="p">))])</span>
-    <span class="k">return</span> <span class="n">TransformedTargetRegressor</span><span class="p">(</span><span class="n">regressor</span><span class="o">=</span><span class="n">pipe</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">,</span> <span class="n">inverse_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">construir_svr</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">c_val</span><span class="p">):</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'poly'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'degree'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'gamma'</span><span class="p">:</span> <span class="s1">'scale'</span><span class="p">,</span> <span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span>
+           <span class="s1">'rbf'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'gamma'</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">},</span>
+           <span class="s1">'sigmoid'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'gamma'</span><span class="p">:</span> <span class="mf">0.005</span><span class="p">,</span> <span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">}}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="p">{</span><span class="s1">'epsilon'</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">TransformedTargetRegressor</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">([(</span><span class="s1">'prep'</span><span class="p">,</span> <span class="n">preprocesador</span><span class="p">),</span> <span class="p">(</span><span class="s1">'reg'</span><span class="p">,</span> <span class="n">SVR</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="n">kernel</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">c_val</span><span class="p">,</span> <span class="o">**</span><span class="n">cfg</span><span class="p">))]),</span>
+                                      <span class="n">func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">,</span> <span class="n">inverse_func</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">expm1</span><span class="p">)</span>
 
-<span class="n">KERNELS</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'linear'</span><span class="p">,</span> <span class="s1">'poly'</span><span class="p">,</span> <span class="s1">'rbf'</span><span class="p">,</span> <span class="s1">'sigmoid'</span><span class="p">]</span>
-<span class="n">VALORES_C</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
-<span class="n">cv_splitter</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">KERNELS</span><span class="p">,</span> <span class="n">VALORES_C</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'linear'</span><span class="p">,</span> <span class="s1">'poly'</span><span class="p">,</span> <span class="s1">'rbf'</span><span class="p">,</span> <span class="s1">'sigmoid'</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">]</span>
+<span class="n">cv5</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 
-<span class="n">resultados_previos</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">resultados</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">krn</span> <span class="ow">in</span> <span class="n">KERNELS</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">c_val</span> <span class="ow">in</span> <span class="n">VALORES_C</span><span class="p">:</span>
-        <span class="n">modelo</span> <span class="o">=</span> <span class="n">construir_pipeline_svr</span><span class="p">(</span><span class="n">krn</span><span class="p">,</span> <span class="n">c_val</span><span class="p">)</span>
-        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-        <span class="n">cv_res</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span>
-            <span class="n">modelo</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv_splitter</span><span class="p">,</span>
-            <span class="n">scoring</span><span class="o">=</span><span class="s1">'neg_root_mean_squared_error'</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span>
-        <span class="p">)</span>
-        <span class="n">modelo</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-        <span class="n">t_ms</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
-
-        <span class="n">y_pred</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-        <span class="n">rmse_cv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="n">cv_res</span><span class="p">[</span><span class="s1">'test_score'</span><span class="p">]))</span>
-        <span class="n">std_cv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="o">-</span><span class="n">cv_res</span><span class="p">[</span><span class="s1">'test_score'</span><span class="p">]))</span>
-        <span class="n">rmse_train_cv</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="n">cv_res</span><span class="p">[</span><span class="s1">'train_score'</span><span class="p">]))</span>
-        <span class="n">rmse_test</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)))</span>
-        <span class="n">mae_test</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
-        <span class="n">r2_test</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">))</span>
-
-        <span class="n">resultados_previos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">"kernel"</span><span class="p">:</span> <span class="n">krn</span><span class="p">,</span>
-            <span class="s2">"C"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">c_val</span><span class="p">),</span>
-            <span class="s2">"RMSE_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">rmse_cv</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">"STD_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">std_cv</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">"RMSE_Train_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">rmse_train_cv</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">"RMSE_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">rmse_test</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">"MAE_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">mae_test</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-            <span class="s2">"R2_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">r2_test</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-            <span class="s2">"Tiempo_ms"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">t_ms</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-            <span class="s2">"modelo_obj"</span><span class="p">:</span> <span class="n">modelo</span><span class="p">,</span>
-            <span class="s2">"y_pred"</span><span class="p">:</span> <span class="n">y_pred</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">construir_svr</span><span class="p">(</span><span class="n">krn</span><span class="p">,</span> <span class="n">c_val</span><span class="p">);</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+        <span class="n">cv</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv5</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">'neg_root_mean_squared_error'</span><span class="p">,</span> <span class="n">return_train_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mod</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">);</span> <span class="n">t_ms</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1000.0</span>
+        <span class="n">yp</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+        <span class="n">resultados</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">"Kernel"</span><span class="p">:</span> <span class="n">krn</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">c_val</span><span class="p">),</span> <span class="s2">"modelo"</span><span class="p">:</span> <span class="n">mod</span><span class="p">,</span> <span class="s2">"y_pred"</span><span class="p">:</span> <span class="n">yp</span><span class="p">,</span> <span class="s2">"Tiempo_ms"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">t_ms</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="s2">"RMSE_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="n">cv</span><span class="p">[</span><span class="s1">'test_score'</span><span class="p">])),</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"STD_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="o">-</span><span class="n">cv</span><span class="p">[</span><span class="s1">'test_score'</span><span class="p">])),</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="s2">"RMSE_Train_CV"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="n">cv</span><span class="p">[</span><span class="s1">'train_score'</span><span class="p">])),</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="s2">"RMSE_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">yp</span><span class="p">))),</span> <span class="mi">2</span><span class="p">),</span>
+            <span class="s2">"MAE_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">yp</span><span class="p">)),</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"R2_Test"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r2_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">yp</span><span class="p">)),</span> <span class="mi">4</span><span class="p">)</span>
         <span class="p">})</span>
 
-<span class="c1"># Ordenamos de mejor a peor según RMSE_Test (y asignamos Rank_01 a Rank_16)</span>
-<span class="n">resultados_ordenados</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">resultados_previos</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">])</span>
-<span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resultados_ordenados</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="n">item</span><span class="p">[</span><span class="s1">'ranking_cv'</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
-    <span class="n">item</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Rank_</span><span class="si">{</span><span class="n">idx</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">_SVR_</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'kernel'</span><span class="p">]</span><span class="si">}</span><span class="s2">_C</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
+<span class="n">resultados</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">])</span>
+<span class="n">registro_experimentos</span><span class="p">,</span> <span class="n">modelos_guardados</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">{}</span>
 
-<span class="c1"># Registramos en MLflow del Rank_01 al Rank_16</span>
-<span class="n">registro_experimentos</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">modelos_guardados</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">tracking</span><span class="o">.</span><span class="n">MlflowClient</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">rm</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">search_registered_models</span><span class="p">():</span>
-    <span class="n">client</span><span class="o">.</span><span class="n">delete_registered_model</span><span class="p">(</span><span class="n">rm</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">resultados_ordenados</span><span class="p">:</span>
-    <span class="n">run_name</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]</span>
-    <span class="n">modelo</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'modelo_obj'</span><span class="p">]</span>
-    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'y_pred'</span><span class="p">]</span>
-    <span class="n">rank</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">'ranking_cv'</span><span class="p">]</span>
-
+<span class="k">for</span> <span class="n">rank</span><span class="p">,</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resultados</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">run_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Rank_</span><span class="si">{</span><span class="n">rank</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">_SVR_</span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span><span class="si">}</span><span class="s2">_C</span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">with</span> <span class="n">mlflow</span><span class="o">.</span><span class="n">start_run</span><span class="p">(</span><span class="n">run_name</span><span class="o">=</span><span class="n">run_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">run</span><span class="p">:</span>
-        <span class="c1"># Parámetros exactos para el Parallel Coordinates Plot de MLflow</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">"C"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'C'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">"kernel"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'kernel'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_param</span><span class="p">(</span><span class="s2">"ranking_cv"</span><span class="p">,</span> <span class="n">rank</span><span class="p">)</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_params</span><span class="p">({</span><span class="s2">"C"</span><span class="p">:</span> <span class="n">it</span><span class="p">[</span><span class="s1">'C'</span><span class="p">],</span> <span class="s2">"kernel"</span><span class="p">:</span> <span class="n">it</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">],</span> <span class="s2">"ranking_cv"</span><span class="p">:</span> <span class="n">rank</span><span class="p">})</span>
+        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metrics</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">it</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"RMSE_CV"</span><span class="p">,</span> <span class="s2">"STD_CV"</span><span class="p">,</span> <span class="s2">"RMSE_Train_CV"</span><span class="p">,</span> <span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="s2">"R2_Test"</span><span class="p">]})</span>
 
-        <span class="c1"># Las 6 métricas para los 6 paneles de gráficas de MLflow UI</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"RMSE_CV"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_CV'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"STD_CV"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'STD_CV'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"RMSE_Train_CV"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Train_CV'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'MAE_Test'</span><span class="p">])</span>
-        <span class="n">mlflow</span><span class="o">.</span><span class="n">log_metric</span><span class="p">(</span><span class="s2">"R2_Test"</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s1">'R2_Test'</span><span class="p">])</span>
-
-        <span class="c1"># Gráfica individual Real vs Predicho</span>
-        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#1976D2'</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">35</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">y_test</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="p">[</span><span class="n">y_test</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="s1">'r--'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Ideal'</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="se">\n</span><span class="s2">RMSE_Test: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> u | R2_Test: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'R2_Test'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Valor Real (unidades)'</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Valor Predicho (unidades)'</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-
-        <span class="n">residuos</span> <span class="o">=</span> <span class="n">y_test</span> <span class="o">-</span> <span class="n">y_pred</span>
-        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">residuos</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2E7D32'</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Residuos (Media: </span><span class="si">{</span><span class="n">residuos</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> u)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
-        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Error (Real - Predicho)'</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">it</span><span class="p">[</span><span class="s1">'y_pred'</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#1976D2'</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">y_test</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="p">[</span><span class="n">y_test</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">y_test</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="s1">'r--'</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2"> | RMSE: </span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">]</span><span class="si">}</span><span class="s2"> u | R²: </span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'R2_Test'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">9.5</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">histplot</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">it</span><span class="p">[</span><span class="s1">'y_pred'</span><span class="p">],</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'#2E7D32'</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">);</span> <span class="n">ax2</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'--'</span><span class="p">)</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Distribución de Residuos (Real - Predicho)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">9.5</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">'bold'</span><span class="p">)</span>
         <span class="n">fig_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ARTIFACTS_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"evaluacion_</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">.png"</span><span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">115</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span> <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fig_path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">110</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
         <span class="n">mlflow</span><span class="o">.</span><span class="n">log_artifact</span><span class="p">(</span><span class="n">fig_path</span><span class="p">,</span> <span class="n">artifact_path</span><span class="o">=</span><span class="s2">"figuras"</span><span class="p">)</span>
 
-        <span class="c1"># Registramos como Logged Model en la pestaña 'Models' SOLO los Top 4 mejores modelos</span>
         <span class="k">if</span> <span class="n">rank</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span>
-                <span class="n">modelo</span><span class="p">,</span> <span class="n">artifact_path</span><span class="o">=</span><span class="s2">"model"</span><span class="p">,</span>
-                <span class="n">registered_model_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Top</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">_SVR_</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'kernel'</span><span class="p">]</span><span class="si">}</span><span class="s2">_C</span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-            <span class="p">)</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
-            <span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">_conn</span><span class="p">:</span>
-                <span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"UPDATE logged_models SET name = ? WHERE source_run_id = ?"</span><span class="p">,</span> <span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="p">))</span>
-                <span class="n">_conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">mlflow</span><span class="o">.</span><span class="n">sklearn</span><span class="o">.</span><span class="n">log_model</span><span class="p">(</span><span class="n">it</span><span class="p">[</span><span class="s1">'modelo'</span><span class="p">],</span> <span class="n">artifact_path</span><span class="o">=</span><span class="s2">"model"</span><span class="p">,</span> <span class="n">registered_model_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Top</span><span class="si">{</span><span class="n">rank</span><span class="si">}</span><span class="s2">_SVR_</span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span><span class="si">}</span><span class="s2">_C</span><span class="si">{</span><span class="n">it</span><span class="p">[</span><span class="s1">'C'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">conn</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">"UPDATE logged_models SET name = ? WHERE source_run_id = ?"</span><span class="p">,</span> <span class="p">(</span><span class="n">run_name</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="p">))</span>
 
-        <span class="n">pkl_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pkl_path</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelo</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-
-        <span class="n">modelos_guardados</span><span class="p">[</span><span class="n">run_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">modelo</span>
-        <span class="n">registro_experimentos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">"run_id"</span><span class="p">:</span> <span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span>
-            <span class="s2">"Experimento"</span><span class="p">:</span> <span class="n">run_name</span><span class="p">,</span>
-            <span class="s2">"ranking_cv"</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
-            <span class="s2">"Kernel"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'kernel'</span><span class="p">],</span>
-            <span class="s2">"C"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'C'</span><span class="p">],</span>
-            <span class="s2">"RMSE_Test"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">],</span>
-            <span class="s2">"MAE_Test"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'MAE_Test'</span><span class="p">],</span>
-            <span class="s2">"R2_Test"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'R2_Test'</span><span class="p">],</span>
-            <span class="s2">"RMSE_CV"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_CV'</span><span class="p">],</span>
-            <span class="s2">"STD_CV"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'STD_CV'</span><span class="p">],</span>
-            <span class="s2">"RMSE_Train_CV"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Train_CV'</span><span class="p">],</span>
-            <span class="s2">"Tiempo_ms"</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="s1">'Tiempo_ms'</span><span class="p">],</span>
-            <span class="s2">"Archivo_Modelo"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">.pkl"</span>
-        <span class="p">})</span>
-        <span class="n">tag_top</span> <span class="o">=</span> <span class="s2">" [REGISTRADO EN MODELS]"</span> <span class="k">if</span> <span class="n">rank</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">""</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[</span><span class="si">{</span><span class="n">rank</span><span class="si">:</span><span class="s2">02d</span><span class="si">}</span><span class="s2">/24] </span><span class="si">{</span><span class="n">run_name</span><span class="si">:</span><span class="s2">&lt;30</span><span class="si">}</span><span class="s2"> | RMSE_Test: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_Test'</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2"> | MAE_Test: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'MAE_Test'</span><span class="p">]</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2"> | R2_Test: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'R2_Test'</span><span class="p">]</span><span class="si">:</span><span class="s2">7.4f</span><span class="si">}</span><span class="s2"> | RMSE_CV: </span><span class="si">{</span><span class="n">item</span><span class="p">[</span><span class="s1">'RMSE_CV'</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}{</span><span class="n">tag_top</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">it</span><span class="p">[</span><span class="s1">'modelo'</span><span class="p">],</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">))</span>
+        <span class="n">modelos_guardados</span><span class="p">[</span><span class="n">run_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">it</span><span class="p">[</span><span class="s1">'modelo'</span><span class="p">]</span>
+        <span class="n">registro_experimentos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"run_id"</span><span class="p">:</span> <span class="n">run</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="s2">"Experimento"</span><span class="p">:</span> <span class="n">run_name</span><span class="p">,</span> <span class="s2">"ranking_cv"</span><span class="p">:</span> <span class="n">rank</span><span class="p">,</span>
+                                      <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">it</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"Kernel"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="s2">"R2_Test"</span><span class="p">,</span> <span class="s2">"RMSE_CV"</span><span class="p">,</span> <span class="s2">"STD_CV"</span><span class="p">,</span> <span class="s2">"RMSE_Train_CV"</span><span class="p">,</span> <span class="s2">"Tiempo_ms"</span><span class="p">]},</span>
+                                      <span class="s2">"Archivo_Modelo"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">run_name</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">})</span>
 
 <span class="n">df_experimentos</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">registro_experimentos</span><span class="p">)</span>
 <span class="n">df_experimentos</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"resumen_experimentos_mlflow.csv"</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== TABLA DE LAS 24 COMBINACIONES SVR REGISTRADAS EN MLFLOW (ORDENADAS DE MEJOR A PEOR) ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_experimentos</span><span class="p">[[</span><span class="s2">"ranking_cv"</span><span class="p">,</span> <span class="s2">"Experimento"</span><span class="p">,</span> <span class="s2">"Kernel"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="s2">"R2_Test"</span><span class="p">,</span> <span class="s2">"RMSE_CV"</span><span class="p">,</span> <span class="s2">"STD_CV"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -8138,257 +8032,33 @@ Entrenamiento: 480 muestras | Prueba: 120 muestras
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:12 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:12 WARNING mlflow.sklearn: Saving scikit-learn models in the pickle or cloudpickle format requires exercising caution because these formats rely on Python's object serialization mechanism, which can execute arbitrary code during deserialization. The recommended safe alternative is the 'skops' format. For more information, see: https://scikit-learn.org/stable/model_persistence.html
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Successfully registered model 'Top1_SVR_poly_C5.0'.
-Created version '1' of model 'Top1_SVR_poly_C5.0'.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[01/24] Rank_01_SVR_poly_C5.0          | RMSE_Test:  574.37 | MAE_Test: 303.42 | R2_Test:  0.9206 | RMSE_CV:  901.21 [REGISTRADO EN MODELS]
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:16 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:16 WARNING mlflow.sklearn: Saving scikit-learn models in the pickle or cloudpickle format requires exercising caution because these formats rely on Python's object serialization mechanism, which can execute arbitrary code during deserialization. The recommended safe alternative is the 'skops' format. For more information, see: https://scikit-learn.org/stable/model_persistence.html
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Successfully registered model 'Top2_SVR_poly_C10.0'.
-Created version '1' of model 'Top2_SVR_poly_C10.0'.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[02/24] Rank_02_SVR_poly_C10.0         | RMSE_Test:  599.74 | MAE_Test: 308.43 | R2_Test:  0.9134 | RMSE_CV:  872.61 [REGISTRADO EN MODELS]
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:19 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:19 WARNING mlflow.sklearn: Saving scikit-learn models in the pickle or cloudpickle format requires exercising caution because these formats rely on Python's object serialization mechanism, which can execute arbitrary code during deserialization. The recommended safe alternative is the 'skops' format. For more information, see: https://scikit-learn.org/stable/model_persistence.html
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Successfully registered model 'Top3_SVR_rbf_C5.0'.
-Created version '1' of model 'Top3_SVR_rbf_C5.0'.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[03/24] Rank_03_SVR_rbf_C5.0           | RMSE_Test:  609.45 | MAE_Test: 313.09 | R2_Test:  0.9106 | RMSE_CV:  888.75 [REGISTRADO EN MODELS]
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:22 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2026/11/22 12:41:22 WARNING mlflow.sklearn: Saving scikit-learn models in the pickle or cloudpickle format requires exercising caution because these formats rely on Python's object serialization mechanism, which can execute arbitrary code during deserialization. The recommended safe alternative is the 'skops' format. For more information, see: https://scikit-learn.org/stable/model_persistence.html
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>Successfully registered model 'Top4_SVR_rbf_C100.0'.
-Created version '1' of model 'Top4_SVR_rbf_C100.0'.
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[04/24] Rank_04_SVR_rbf_C100.0         | RMSE_Test:  616.89 | MAE_Test: 319.52 | R2_Test:  0.9084 | RMSE_CV:  821.44
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[05/24] Rank_05_SVR_rbf_C10.0          | RMSE_Test:  635.56 | MAE_Test: 320.56 | R2_Test:  0.9027 | RMSE_CV:  846.93
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[06/24] Rank_06_SVR_poly_C100.0        | RMSE_Test:  666.84 | MAE_Test: 318.57 | R2_Test:  0.8929 | RMSE_CV:  987.27
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[07/24] Rank_07_SVR_poly_C1.0          | RMSE_Test:  902.29 | MAE_Test: 403.71 | R2_Test:  0.8039 | RMSE_CV: 1348.86
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[08/24] Rank_08_SVR_linear_C5.0        | RMSE_Test:  953.35 | MAE_Test: 400.20 | R2_Test:  0.7811 | RMSE_CV: 1361.16
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[09/24] Rank_09_SVR_linear_C1.0        | RMSE_Test:  961.96 | MAE_Test: 400.86 | R2_Test:  0.7771 | RMSE_CV: 1368.17
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[10/24] Rank_10_SVR_linear_C10.0       | RMSE_Test:  966.39 | MAE_Test: 402.75 | R2_Test:  0.7751 | RMSE_CV: 1364.82
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[11/24] Rank_11_SVR_linear_C100.0      | RMSE_Test:  967.35 | MAE_Test: 402.92 | R2_Test:  0.7746 | RMSE_CV: 1359.93
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[12/24] Rank_12_SVR_linear_C0.5        | RMSE_Test:  992.55 | MAE_Test: 401.99 | R2_Test:  0.7628 | RMSE_CV: 1364.42
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[13/24] Rank_13_SVR_linear_C0.1        | RMSE_Test: 1023.43 | MAE_Test: 417.65 | R2_Test:  0.7478 | RMSE_CV: 1425.91
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[14/24] Rank_14_SVR_sigmoid_C100.0     | RMSE_Test: 1055.43 | MAE_Test: 419.40 | R2_Test:  0.7317 | RMSE_CV: 1428.50
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[15/24] Rank_15_SVR_sigmoid_C10.0      | RMSE_Test: 1076.84 | MAE_Test: 445.10 | R2_Test:  0.7207 | RMSE_CV: 1535.60
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[16/24] Rank_16_SVR_rbf_C1.0           | RMSE_Test: 1103.75 | MAE_Test: 472.77 | R2_Test:  0.7066 | RMSE_CV: 1630.97
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[17/24] Rank_17_SVR_sigmoid_C5.0       | RMSE_Test: 1265.99 | MAE_Test: 510.19 | R2_Test:  0.6140 | RMSE_CV: 1756.07
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[18/24] Rank_18_SVR_poly_C0.5          | RMSE_Test: 1278.09 | MAE_Test: 565.30 | R2_Test:  0.6066 | RMSE_CV: 1585.94
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[19/24] Rank_19_SVR_rbf_C0.5           | RMSE_Test: 1450.44 | MAE_Test: 599.66 | R2_Test:  0.4934 | RMSE_CV: 2009.19
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[20/24] Rank_20_SVR_poly_C0.1          | RMSE_Test: 1703.52 | MAE_Test: 816.38 | R2_Test:  0.3011 | RMSE_CV: 2176.55
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[21/24] Rank_21_SVR_sigmoid_C1.0       | RMSE_Test: 1899.86 | MAE_Test: 845.47 | R2_Test:  0.1308 | RMSE_CV: 2371.96
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[22/24] Rank_22_SVR_rbf_C0.1           | RMSE_Test: 2020.40 | MAE_Test: 902.76 | R2_Test:  0.0170 | RMSE_CV: 2486.09
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[23/24] Rank_23_SVR_sigmoid_C0.5       | RMSE_Test: 2048.14 | MAE_Test: 924.22 | R2_Test: -0.0102 | RMSE_CV: 2508.51
-</pre>
-</div>
-</div>
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[24/24] Rank_24_SVR_sigmoid_C0.1       | RMSE_Test: 2151.42 | MAE_Test: 984.56 | R2_Test: -0.1147 | RMSE_CV: 2598.82
+<pre>=== TABLA DE LAS 24 COMBINACIONES SVR REGISTRADAS EN MLFLOW (ORDENADAS DE MEJOR A PEOR) ===
+ ranking_cv                Experimento  Kernel     C  RMSE_Test  MAE_Test  R2_Test  RMSE_CV  STD_CV
+          1      Rank_01_SVR_poly_C5.0    poly   5.0     574.37    303.42   0.9206   901.21  170.39
+          2     Rank_02_SVR_poly_C10.0    poly  10.0     599.74    308.43   0.9134   872.61  132.68
+          3       Rank_03_SVR_rbf_C5.0     rbf   5.0     609.45    313.09   0.9106   888.75  129.27
+          4     Rank_04_SVR_rbf_C100.0     rbf 100.0     616.89    319.52   0.9084   821.44   91.92
+          5      Rank_05_SVR_rbf_C10.0     rbf  10.0     635.56    320.56   0.9027   846.93  106.13
+          6    Rank_06_SVR_poly_C100.0    poly 100.0     666.84    318.57   0.8929   987.27  183.41
+          7      Rank_07_SVR_poly_C1.0    poly   1.0     902.29    403.71   0.8039  1348.86  246.30
+          8    Rank_08_SVR_linear_C5.0  linear   5.0     953.35    400.20   0.7811  1361.16  283.85
+          9    Rank_09_SVR_linear_C1.0  linear   1.0     961.96    400.86   0.7771  1368.17  300.42
+         10   Rank_10_SVR_linear_C10.0  linear  10.0     966.39    402.75   0.7751  1364.82  287.41
+         11  Rank_11_SVR_linear_C100.0  linear 100.0     967.35    402.92   0.7746  1359.93  284.72
+         12    Rank_12_SVR_linear_C0.5  linear   0.5     992.55    401.99   0.7628  1364.42  311.47
+         13    Rank_13_SVR_linear_C0.1  linear   0.1    1023.43    417.65   0.7478  1425.91  387.26
+         14 Rank_14_SVR_sigmoid_C100.0 sigmoid 100.0    1055.43    419.40   0.7317  1428.50  343.20
+         15  Rank_15_SVR_sigmoid_C10.0 sigmoid  10.0    1076.84    445.10   0.7207  1535.60  406.14
+         16       Rank_16_SVR_rbf_C1.0     rbf   1.0    1103.75    472.77   0.7066  1630.97  460.77
+         17   Rank_17_SVR_sigmoid_C5.0 sigmoid   5.0    1265.99    510.19   0.6140  1756.07  455.81
+         18      Rank_18_SVR_poly_C0.5    poly   0.5    1278.09    565.30   0.6066  1585.94  321.41
+         19       Rank_19_SVR_rbf_C0.5     rbf   0.5    1450.44    599.66   0.4934  2009.19  480.00
+         20      Rank_20_SVR_poly_C0.1    poly   0.1    1703.52    816.38   0.3011  2176.55  346.40
+         21   Rank_21_SVR_sigmoid_C1.0 sigmoid   1.0    1899.86    845.47   0.1308  2371.96  497.44
+         22       Rank_22_SVR_rbf_C0.1     rbf   0.1    2020.40    902.76   0.0170  2486.09  509.97
+         23   Rank_23_SVR_sigmoid_C0.5 sigmoid   0.5    2048.14    924.22  -0.0102  2508.51  509.38
+         24   Rank_24_SVR_sigmoid_C0.1 sigmoid   0.1    2151.42    984.56  -0.1147  2598.82  515.76
 </pre>
 </div>
 </div>
@@ -8492,37 +8162,24 @@ Created version '1' of model 'Top4_SVR_rbf_C100.0'.
 <div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">mejores_por_kernel</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">mapa_nombres</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'poly'</span><span class="p">:</span> <span class="s1">'Polinomico'</span><span class="p">,</span> <span class="s1">'rbf'</span><span class="p">:</span> <span class="s1">'RBF_Gaussiano'</span><span class="p">,</span> <span class="s1">'linear'</span><span class="p">:</span> <span class="s1">'Lineal'</span><span class="p">,</span> <span class="s1">'sigmoid'</span><span class="p">:</span> <span class="s1">'Sigmoide'</span><span class="p">}</span>
-<span class="k">for</span> <span class="n">krn</span><span class="p">,</span> <span class="n">nombre_largo</span> <span class="ow">in</span> <span class="n">mapa_nombres</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">fila_k</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="p">[</span><span class="n">df_experimentos</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span> <span class="o">==</span> <span class="n">krn</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">mejores_por_kernel</span><span class="p">[</span><span class="n">nombre_largo</span><span class="p">]</span> <span class="o">=</span> <span class="n">fila_k</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"mejor_svm_</span><span class="si">{</span><span class="n">nombre_largo</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">fila_k</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">mapa</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'poly'</span><span class="p">:</span> <span class="s1">'Polinomico'</span><span class="p">,</span> <span class="s1">'rbf'</span><span class="p">:</span> <span class="s1">'RBF_Gaussiano'</span><span class="p">,</span> <span class="s1">'linear'</span><span class="p">:</span> <span class="s1">'Lineal'</span><span class="p">,</span> <span class="s1">'sigmoid'</span><span class="p">:</span> <span class="s1">'Sigmoide'</span><span class="p">}</span>
+<span class="n">mejores_k</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">krn</span><span class="p">,</span> <span class="n">nom</span> <span class="ow">in</span> <span class="n">mapa</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">fila</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="p">[</span><span class="n">df_experimentos</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span> <span class="o">==</span> <span class="n">krn</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">mejores_k</span><span class="p">[</span><span class="n">nom</span><span class="p">]</span> <span class="o">=</span> <span class="n">fila</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">fila</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">MODELS_DIR</span><span class="si">}</span><span class="s2">/mejor_svm_</span><span class="si">{</span><span class="n">nom</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">))</span>
 
-<span class="n">mejor_global_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">segundo_mejor_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="p">[</span><span class="n">df_experimentos</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">peor_global_row</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s1">'peor_modelo_svm.pkl'</span><span class="p">),</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">peor_global_row</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">mejor_g</span><span class="p">,</span> <span class="n">segundo_g</span><span class="p">,</span> <span class="n">peor_g</span> <span class="o">=</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">df_experimentos</span><span class="p">[</span><span class="n">df_experimentos</span><span class="p">[</span><span class="s1">'Kernel'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'rbf'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">mejor_g</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">MODELS_DIR</span><span class="si">}</span><span class="s2">/mejor_modelo_svm.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">))</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">mejor_g</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">MODELS_DIR</span><span class="si">}</span><span class="s2">/mejor_modelo_global.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">))</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">peor_g</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span>  <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">MODELS_DIR</span><span class="si">}</span><span class="s2">/peor_modelo_svm.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">))</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"mejor_modelo_svm.pkl"</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">mejor_global_row</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"mejor_modelo_global.pkl"</span><span class="p">),</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelos_guardados</span><span class="p">[</span><span class="n">mejor_global_row</span><span class="p">[</span><span class="s1">'Experimento'</span><span class="p">]],</span> <span class="n">f</span><span class="p">)</span>
+<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">({</span><span class="s2">"mejor_experimento_global"</span><span class="p">:</span> <span class="n">mejor_g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="s2">"mejor_experimento_svm"</span><span class="p">:</span> <span class="n">mejor_g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+           <span class="s2">"segundo_mejor_svm"</span><span class="p">:</span> <span class="n">segundo_g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="s2">"peor_experimento_svm"</span><span class="p">:</span> <span class="n">peor_g</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
+           <span class="s2">"mejores_por_kernel"</span><span class="p">:</span> <span class="n">mejores_k</span><span class="p">},</span> <span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">MODELS_DIR</span><span class="si">}</span><span class="s2">/mejor_experimento_info.json"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">),</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-<span class="n">seleccion_info</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"mejor_experimento_global"</span><span class="p">:</span> <span class="n">mejor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-    <span class="s2">"mejor_experimento_svm"</span><span class="p">:</span> <span class="n">mejor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-    <span class="s2">"segundo_mejor_svm"</span><span class="p">:</span> <span class="n">segundo_mejor_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-    <span class="s2">"peor_experimento_svm"</span><span class="p">:</span> <span class="n">peor_global_row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span>
-    <span class="s2">"mejores_por_kernel"</span><span class="p">:</span> <span class="n">mejores_por_kernel</span>
-<span class="p">}</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODELS_DIR</span><span class="p">,</span> <span class="s2">"mejor_experimento_info.json"</span><span class="p">),</span> <span class="s2">"w"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">seleccion_info</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">"=== TOP 4 MEJORES MODELOS GUARDADOS EN LA PESTAÑA 'MODELS' DE MLFLOW ==="</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df_experimentos</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)[[</span><span class="s2">"Experimento"</span><span class="p">,</span> <span class="s2">"Kernel"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="s2">"R2_Test"</span><span class="p">,</span> <span class="s2">"RMSE_CV"</span><span class="p">,</span> <span class="s2">"STD_CV"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"=== TOP 4 MEJORES MODELOS (EN PESTAÑA 'MODELS') Y PEOR MODELO GLOBAL (RANK 24) ==="</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_experimentos</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">df_experimentos</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)])[[</span><span class="s2">"Experimento"</span><span class="p">,</span> <span class="s2">"Kernel"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">,</span> <span class="s2">"RMSE_Test"</span><span class="p">,</span> <span class="s2">"MAE_Test"</span><span class="p">,</span> <span class="s2">"R2_Test"</span><span class="p">,</span> <span class="s2">"RMSE_CV"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -8535,12 +8192,13 @@ Created version '1' of model 'Top4_SVR_rbf_C100.0'.
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>=== TOP 4 MEJORES MODELOS GUARDADOS EN LA PESTAÑA 'MODELS' DE MLFLOW ===
-           Experimento Kernel     C  RMSE_Test  MAE_Test  R2_Test  RMSE_CV  STD_CV
- Rank_01_SVR_poly_C5.0   poly   5.0     574.37    303.42   0.9206   901.21  170.39
-Rank_02_SVR_poly_C10.0   poly  10.0     599.74    308.43   0.9134   872.61  132.68
-  Rank_03_SVR_rbf_C5.0    rbf   5.0     609.45    313.09   0.9106   888.75  129.27
-Rank_04_SVR_rbf_C100.0    rbf 100.0     616.89    319.52   0.9084   821.44   91.92
+<pre>=== TOP 4 MEJORES MODELOS (EN PESTAÑA 'MODELS') Y PEOR MODELO GLOBAL (RANK 24) ===
+             Experimento  Kernel     C  RMSE_Test  MAE_Test  R2_Test  RMSE_CV
+   Rank_01_SVR_poly_C5.0    poly   5.0     574.37    303.42   0.9206   901.21
+  Rank_02_SVR_poly_C10.0    poly  10.0     599.74    308.43   0.9134   872.61
+    Rank_03_SVR_rbf_C5.0     rbf   5.0     609.45    313.09   0.9106   888.75
+  Rank_04_SVR_rbf_C100.0     rbf 100.0     616.89    319.52   0.9084   821.44
+Rank_24_SVR_sigmoid_C0.1 sigmoid   0.1    2151.42    984.56  -0.1147  2598.82
 </pre>
 </div>
 </div>
