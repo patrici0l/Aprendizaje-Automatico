@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte Ejecutivo — Solución Tecnológica de Pronóstico de Ventas</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+    font-family: 'Segoe UI', Calibri, Arial, sans-serif;
+    background: #FFFFFF;
+    color: #1E293B;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 9mm 11mm 7mm 11mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Encabezado limpio */
+  .header {
+    border-bottom: 2.5px solid #1B365D;
+    padding-bottom: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .header h1 {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #1B365D;
+    line-height: 1.15;
+    letter-spacing: -0.1px;
+  }
+  .header .sub {
+    font-size: 8.6pt;
+    color: #475569;
+    margin-top: 2.5px;
+    font-weight: 500;
+  }
+  .header-meta {
+    text-align: right;
+    font-size: 7.6pt;
+    color: #64748B;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+  .header-meta strong {
+    color: #1B365D;
+    display: block;
+    font-size: 8pt;
+  }
+
+  /* 3 Indicadores ejecutivos */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .kpi-card {
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-left: 4px solid #1B365D;
+    padding: 6.5px 10px;
+  }
+  .kpi-card.steel {
+    border-left-color: #5A7D9A;
+  }
+  .kpi-val {
+    font-size: 13.5pt;
+    font-weight: 800;
+    color: #1B365D;
+    line-height: 1.1;
+  }
+  .kpi-lbl {
+    font-size: 7.6pt;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    margin-top: 2.5px;
+  }
+
+  /* 2 Columnas de ideas cortas (cero párrafos) */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .sec-col {
+    border-top: 1.5px solid #1B365D;
+    padding-top: 5px;
+  }
+  .sec-col.steel {
+    border-top-color: #5A7D9A;
+  }
+  .sec-title {
+    font-size: 8.8pt;
+    font-weight: 800;
+    color: #1B365D;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    letter-spacing: 0.25px;
+  }
+  .sec-col.steel .sec-title {
+    color: #475569;
+  }
+  ul.bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  ul.bullets li {
+    font-size: 8.1pt;
+    line-height: 1.25;
+    color: #1E293B;
+    padding-left: 10px;
+    position: relative;
+  }
+  ul.bullets li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #1B365D;
+    font-weight: 900;
+  }
+
+  /* Contenedores de Figuras */
+  .fig-box {
+    border: 1px solid #CBD5E1;
+    padding: 4px 6px;
+    background: #FFFFFF;
+  }
+  .fig-box img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Cierre de 3 decisiones clave */
+  .actions-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .action-box {
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-top: 2.5px solid #1B365D;
+    padding: 5.5px 9px;
+    font-size: 7.9pt;
+    line-height: 1.28;
+    color: #1E293B;
+  }
+  .action-box strong {
+    color: #1B365D;
+    display: block;
+    font-size: 8.1pt;
+    margin-bottom: 1.5px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 7pt;
+    color: #64748B;
+    border-top: 1px solid #CBD5E1;
+    padding-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 1. ENCABEZADO CORPORATIVO (SIN INTEGRANTES) -->
+  <div class="header">
+    <div>
+      <h1>REPORTE EJECUTIVO: SOLUCIÓN TECNOLÓGICA DE PRONÓSTICO DE VENTAS</h1>
+      <div class="sub">Análisis Comercial por Categoría y Proyección Inteligente de Demanda</div>
+    </div>
+    <div class="header-meta">
+      <strong>Período: 60 días (28/Mar – 26/May)</strong>
+      6 Categorías • 10 Productos
+    </div>
+  </div>
+
+  <!-- 2. BANDA DE 3 INDICADORES SIMPLES -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-val">789.055 u</div>
+      <div class="kpi-lbl">Ventas Totales (60 días)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-val">83,1 %</div>
+      <div class="kpi-lbl">Concentrado en 2 Categorías Líderes</div>
+    </div>
+    <div class="kpi-card steel">
+      <div class="kpi-val">92,1 %</div>
+      <div class="kpi-lbl">Exactitud del Pronóstico del Modelo</div>
+    </div>
+  </div>
+
+  <!-- 3. BLOQUE DE IDEAS CLAVE EN 1 LÍNEA (SIN PÁRRAFOS) -->
+  <div class="ideas-grid">
+    <div class="sec-col">
+      <div class="sec-title">Ideas Clave de Ventas</div>
+      <ul class="bullets">
+        <li><b>Accesorios lidera el negocio:</b> 512.276 unidades (64,9 % del total).</li>
+        <li><b>Computación es la 2.ª categoría:</b> 143.322 unidades (18,2 % del total).</li>
+        <li><b>3 productos mueven el 83 %:</b> Cable HDMI 4K, Monitor LG 24" y Cargador 65W.</li>
+        <li><b>Días feriados duplican ventas:</b> Demanda sube de 935 a 2.052 u/día.</li>
+      </ul>
+    </div>
+    <div class="sec-col steel">
+      <div class="sec-title">Solución Tecnológica</div>
+      <ul class="bullets">
+        <li><b>Pronóstico automático diario:</b> Proyecta ventas por producto y categoría.</li>
+        <li><b>Variables comerciales integradas:</b> Calendario, feriados, descuentos y clima.</li>
+        <li><b>Reposición preventiva:</b> Detecta faltantes de stock antes de días pico.</li>
+        <li><b>Simulación de descuentos:</b> Estima +81 % de demanda con 20 % dto.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. FIGURA 1: VENTAS — TOP PRODUCTOS AGRUPADOS POR CATEGORÍA -->
+  <div class="fig-box">
+    <img src="artefactos_mlflow/fig1_ejecutivo_ventas_categorias.png" alt="Figura 1 Ventas por Categoría y Producto">
+  </div>
+
+  <!-- 5. FIGURA 2: SOLUCIÓN DEL MODELO -->
+  <div class="fig-box">
+    <img src="artefactos_mlflow/fig2_ejecutivo_solucion_modelo.png" alt="Figura 2 Solución del Modelo Predictivo">
+  </div>
+
+  <!-- 6. CIERRE EJECUTIVO MÍNIMO (3 DECISIONES EN 1 LÍNEA) -->
+  <div class="actions-row">
+    <div class="action-box">
+      <strong>Compras</strong>
+      Aumentar stock base en <b>Accesorios</b> y <b>Computación</b> antes de feriados.
+    </div>
+    <div class="action-box">
+      <strong>Almacén</strong>
+      Programar alertas automáticas de reposición para fines de semana.
+    </div>
+    <div class="action-box">
+      <strong>Promociones</strong>
+      Impulsar <b>Audio</b> y <b>Tablets</b> con descuentos dirigidos del 15–20 %.
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Reporte Ejecutivo Empresarial • Solución de Planificación Comercial</span>
+    <span>Datos validados de ventas e inventario (60 días)</span>
+  </div>
+
+</div>
+</body>
+</html>
